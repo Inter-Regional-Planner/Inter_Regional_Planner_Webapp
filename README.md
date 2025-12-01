@@ -12,7 +12,7 @@ The platform simplifies the Free Movement of Skills process by allowing users to
 
 This project promotes safe, legal, and informed intra-regional mobility while supporting Caribbean integration and economic opportunity.
 
-Google Doc for more design and fucntionality information: https://docs.google.com/document/d/1ye3nYQRRLvTwb_aQYq05UvZr_i9UvOYOFhHYkTfdPDY/edit?usp=sharing
+Google Doc for more design and functionality information: https://docs.google.com/document/d/1ye3nYQRRLvTwb_aQYq05UvZr_i9UvOYOFhHYkTfdPDY/edit?usp=sharing
 ---
 
 ## **Features**
