@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePlanner } from '../planner/PlannerContext';
 
-const API_BASE = 'http://localhost:4000';
+/*const API_BASE = 'http://localhost:4000';
+So locally it will still use localhost:4000, but in production you can set VITE_API_BASE_URL to the Render URL.*/
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
+
 
 export default function Wizard() {
   const {
