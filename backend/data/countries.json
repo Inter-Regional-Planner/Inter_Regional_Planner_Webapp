@@ -1,0 +1,14 @@
+[
+  { "code": "TT", "name": "Trinidad and Tobago" },
+  { "code": "BB", "name": "Barbados" },
+  { "code": "GY", "name": "Guyana" },
+  { "code": "JM", "name": "Jamaica" },
+  { "code": "LC", "name": "Saint Lucia" },
+  { "code": "VC", "name": "St. Vincent and the Grenadines" },
+  { "code": "GD", "name": "Grenada" },
+  { "code": "DM", "name": "Dominica" },
+  { "code": "KN", "name": "St. Kitts and Nevis" },
+  { "code": "AG", "name": "Antigua and Barbuda" },
+  { "code": "SR", "name": "Suriname" },
+  { "code": "BZ", "name": "Belize" }
+]
