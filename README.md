@@ -1,8 +1,3 @@
-Below is a **clean, polished, competition-ready `README.md`** you can copy directly into your GitHub repository.
-It includes everything: project overview, features, installation instructions, and how to run both the frontend and backend.
-
----
-
 # **CSME Move Planner – README**
 
 ## **Overview**
@@ -17,6 +12,7 @@ The platform simplifies the Free Movement of Skills process by allowing users to
 
 This project promotes safe, legal, and informed intra-regional mobility while supporting Caribbean integration and economic opportunity.
 
+Google Doc for more design and functionality information: https://docs.google.com/document/d/1ye3nYQRRLvTwb_aQYq05UvZr_i9UvOYOFhHYkTfdPDY/edit?usp=sharing
 ---
 
 ## **Features**
