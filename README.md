@@ -19,27 +19,27 @@ Google Doc for more design and functionality information: https://docs.google.co
 
 ### Move Planner Wizard
 
-Collects user inputs (home country, target country, category) and generates a custom plan.
+-Collects user inputs (home country, target country, category) and generates a custom plan.
 
 ### Rule-Based Guidance Engine
 
-The backend matches country/category combinations with stored rules and returns tailored instructions.
+-The backend matches country/category combinations with stored rules and returns tailored instructions.
 
 ### Document Checklist
 
-Interactive checklist stored in browser localStorage.
+-Interactive checklist stored in browser localStorage.
 
 ### CSME Education Section
 
-Explains Free Movement of Skills, eligibility categories, and limitations.
+-Explains Free Movement of Skills, eligibility categories, and limitations.
 
 ### Resources Page
 
-Lists participating CSME Member States and research tips.
+-Lists participating CSME Member States and research tips.
 
 ### Fully Modular & Expandable
 
-New countries, categories, or rules can easily be added by editing JSON files.
+-New countries, categories, or rules can easily be added by editing JSON files.
 
 ---
 
