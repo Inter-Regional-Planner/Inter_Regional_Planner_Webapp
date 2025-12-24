@@ -1,145 +1,227 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { usePlanner } from '../planner/PlannerContext';
+// src/pages/Wizard.jsx
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { usePlanner } from "../planner/PlannerContext";
 
-/*const API_BASE = 'http://localhost:4000';
-So locally it will still use localhost:4000, but in production you can set VITE_API_BASE_URL to the Render URL.*/
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 
-
-export default function Wizard() {
-  const {
-    homeCountry,
-    targetCountry,
-    category,
-    setHomeCountry,
-    setTargetCountry,
-    setCategory,
-    setPlan
-  } = usePlanner();
+function Wizard() {
+  const navigate = useNavigate();
+  const { setSelection, setPlan } = usePlanner();
 
   const [countries, setCountries] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [fromCountry, setFromCountry] = useState("");
+  const [toCountry, setToCountry] = useState("");
+  const [category, setCategory] = useState("");
+  const [loadingOptions, setLoadingOptions] = useState(true);
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
+  // Load country + category options
   useEffect(() => {
-    async function loadData() {
+    async function loadOptions() {
       try {
+        setLoadingOptions(true);
+        setError("");
+
         const [countriesRes, categoriesRes] = await Promise.all([
           fetch(`${API_BASE}/api/countries`),
-          fetch(`${API_BASE}/api/categories`)
+          fetch(`${API_BASE}/api/categories`),
         ]);
 
-        const countriesJson = await countriesRes.json();
-        const categoriesJson = await categoriesRes.json();
+        const countriesData = await countriesRes.json().catch(() => []);
+        const categoriesData = await categoriesRes.json().catch(() => []);
 
-        setCountries(countriesJson);
-        setCategories(categoriesJson);
+        if (!countriesRes.ok || !categoriesRes.ok) {
+          console.error("Options error:", { countriesData, categoriesData });
+          throw new Error("Failed to load options");
+        }
+
+        setCountries(countriesData || []);
+        setCategories(categoriesData || []);
       } catch (err) {
-        console.error(err);
-        setError('Unable to load options. Please try again later.');
+        console.error("loadOptions error:", err);
+        setError(
+          "Unable to load options right now. Please refresh or try again later."
+        );
       } finally {
-        setLoading(false);
+        setLoadingOptions(false);
       }
     }
 
-    loadData();
+    loadOptions();
   }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setError('');
+    setError("");
 
-    if (!homeCountry || !targetCountry || !category) {
-      setError('Please select a home country, target country and category.');
+    if (!fromCountry || !toCountry || !category) {
+      setError("Please select your home country, destination, and category.");
       return;
     }
 
     try {
-      const url = new URL(`${API_BASE}/api/rules`);
-      url.searchParams.set('from', homeCountry);
-      url.searchParams.set('to', targetCountry);
-      url.searchParams.set('category', category);
+      setSubmitting(true);
 
-      const res = await fetch(url.toString());
-      const data = await res.json();
+      // Save selection in context for the My Plan page
+      setSelection({
+        fromCountry,
+        toCountry,
+        category,
+      });
+
+      // If user is logged in, include their id
+      const currentUser = JSON.parse(
+        localStorage.getItem("irp_user") || "null"
+      );
+      const userId = currentUser?.id || null;
+
+      const res = await fetch(`${API_BASE}/api/plan`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fromCountry,
+          toCountry,
+          category,
+          userId, // backend treats null as guest
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        console.error("Plan error response:", data);
+        throw new Error(data.error || "Failed to generate plan.");
+      }
+
+      // Save plan in context and go to My Plan page
       setPlan(data);
-      navigate('/plan');
+      navigate("/my-plan");
     } catch (err) {
-      console.error(err);
-      setError('Unable to generate your plan right now.');
+      console.error("Plan generation error:", err);
+      setError(
+        err.message ||
+          "We couldn’t generate your plan right now. Please check your inputs and try again."
+      );
+    } finally {
+      setSubmitting(false);
     }
   }
 
-  if (loading) {
-    return <p>Loading options...</p>;
-  }
-
   return (
-    <section>
-      <h1>Plan My Move</h1>
-      <p>
-        Select your home country, the country you want to move to, and your
-        professional category. We’ll generate a simple, personalized guide.
-      </p>
+    <div className="page page-wizard">
+      {/* Header */}
+      <section className="section">
+        <h1 className="section-title">Plan My Move</h1>
+        <p className="section-subtitle">
+          Tell us where you&apos;re coming from, where you&apos;d like to work,
+          and your professional category. We&apos;ll generate a simple,
+          personalized guide based on CSME Free Movement of Skills.
+        </p>
+      </section>
 
-      {error && <p className="error">{error}</p>}
+      {/* Layout: form + help panel */}
+      <section className="section">
+        <div className="planner-grid">
+          {/* Left: form */}
+          <div className="planner-card">
+            {loadingOptions ? (
+              <p>Loading options…</p>
+            ) : (
+              <form onSubmit={handleSubmit}>
+                {error && <p className="form-error">{error}</p>}
 
-      <form className="wizard-form" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="homeCountry">I am from</label>
-          <select
-            id="homeCountry"
-            value={homeCountry}
-            onChange={e => setHomeCountry(e.target.value)}
-          >
-            <option value="">Select country</option>
-            {countries.map(c => (
-              <option key={c.code} value={c.code}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+                <label className="form-label">
+                  I am from
+                  <select
+                    className="form-input"
+                    value={fromCountry}
+                    onChange={(e) => setFromCountry(e.target.value)}
+                  >
+                    <option value="">Select country</option>
+                    {countries.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="form-label">
+                  I want to work in
+                  <select
+                    className="form-input"
+                    value={toCountry}
+                    onChange={(e) => setToCountry(e.target.value)}
+                  >
+                    <option value="">Select country</option>
+                    {countries.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="form-label">
+                  My category
+                  <select
+                    className="form-input"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                  >
+                    <option value="">Select category</option>
+                    {categories.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <button
+                  type="submit"
+                  className="btn-primary full-width"
+                  disabled={submitting}
+                >
+                  {submitting ? "Generating plan…" : "Generate My Plan"}
+                </button>
+              </form>
+            )}
+          </div>
+
+          {/* Right: explainer */}
+          <div className="planner-card secondary">
+            <h2>What you&apos;ll receive</h2>
+            <ul className="planner-list">
+              <li>Eligibility summary based on your move.</li>
+              <li>Country- and category-specific requirements.</li>
+              <li>Document checklist with explanations.</li>
+              <li>Estimated timeline for key steps.</li>
+              <li>Links to official websites and authorities.</li>
+            </ul>
+
+            <h3>Tips</h3>
+            <ul className="planner-list">
+              <li>Make sure your category matches your actual qualification.</li>
+              <li>
+                You can rerun the planner with different combinations to compare
+                options.
+              </li>
+              <li>
+                Keep copies of all documents and receipts for immigration and
+                Skills Certificate applications.
+              </li>
+            </ul>
+          </div>
         </div>
-
-        <div className="form-group">
-          <label htmlFor="targetCountry">I want to work in</label>
-          <select
-            id="targetCountry"
-            value={targetCountry}
-            onChange={e => setTargetCountry(e.target.value)}
-          >
-            <option value="">Select country</option>
-            {countries.map(c => (
-              <option key={c.code} value={c.code}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="category">My category</label>
-          <select
-            id="category"
-            value={category}
-            onChange={e => setCategory(e.target.value)}
-          >
-            <option value="">Select category</option>
-            {categories.map(cat => (
-              <option key={cat.id} value={cat.id}>
-                {cat.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <button type="submit" className="primary-btn">
-          Generate My Plan
-        </button>
-      </form>
-    </section>
+      </section>
+    </div>
   );
 }
+
+export default Wizard;
+

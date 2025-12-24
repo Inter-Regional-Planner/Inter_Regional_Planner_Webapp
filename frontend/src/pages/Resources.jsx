@@ -1,57 +1,145 @@
-import { useEffect, useState } from 'react';
+// src/pages/Resources.jsx
+import { useEffect, useState } from "react";
 
-/*const API_BASE = 'http://localhost:4000';
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 
-So locally it will still use localhost:4000, but in production you can set VITE_API_BASE_URL to the Render URL.*/
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
-
-export default function Resources() {
-  const [countries, setCountries] = useState([]);
+function Resources() {
+  const [resources, setResources] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    async function load() {
+    async function loadResources() {
       try {
-        const res = await fetch(`${API_BASE}/api/countries`);
-        const json = await res.json();
-        setCountries(json);
+        setLoading(true);
+        setError("");
+
+        // assumes your backend exposes GET /api/resources
+        const res = await fetch(`${API_BASE}/api/resources`);
+
+        if (!res.ok) {
+          throw new Error("Failed to load resources");
+        }
+
+        const data = await res.json();
+        setResources(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error(err);
+        setError(
+          "We couldn’t load the resources right now. Please refresh or try again later."
+        );
+      } finally {
+        setLoading(false);
       }
     }
-    load();
+
+    loadResources();
   }, []);
 
+  const filtered = resources.filter((item) => {
+    const name = (item.name || item.country || "").toLowerCase();
+    const q = search.toLowerCase();
+    return name.includes(q);
+  });
+
   return (
-    <section>
-      <h1>Resources</h1>
-      <p>
-        Use this page as a starting point for doing deeper research on your
-        target country. Always rely on official government and CARICOM websites
-        for final decisions.
-      </p>
+    <div className="page page-resources">
+      {/* Header */}
+      <section className="section">
+        <h1 className="section-title">Resources</h1>
+        <p className="section-subtitle">
+          Explore immigration websites, competent authorities, forms, and
+          country-specific notes to support your move across the Caribbean.
+        </p>
+      </section>
 
-      <h2>Participating CSME Member States (Sample List)</h2>
-      <ul>
-        {countries.map(c => (
-          <li key={c.code}>
-            <strong>{c.name}</strong> ({c.code})
-          </li>
-        ))}
-      </ul>
+      {/* Search + content */}
+      <section className="section">
+        {/* Search bar */}
+        <div className="resources-search">
+          <input
+            type="text"
+            className="form-input"
+            placeholder="Search by country or territory…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
 
-      <h2>What to Research</h2>
-      <ul>
-        <li>Which institution is the Competent Authority for your category</li>
-        <li>Latest immigration rules and entry requirements</li>
-        <li>Updated Skills Certificate application forms and fees</li>
-        <li>Any changes in approved categories for free movement of skills</li>
-      </ul>
+        {loading ? (
+          <p>Loading resources…</p>
+        ) : error ? (
+          <p className="form-error">{error}</p>
+        ) : filtered.length === 0 ? (
+          <p>No resources found for that search.</p>
+        ) : (
+          <div className="resources-grid">
+            {filtered.map((item) => {
+              const name = item.name || item.country || "Country";
+              const immigration = item.immigrationUrl || item.immigration;
+              const authority =
+                item.competentAuthorityUrl || item.competentAuthority;
+              const forms = item.formsUrl || item.forms;
+              const notes = item.notes || item.description;
 
-      <p>
-        You can also search for &quot;CARICOM Skills Certificate&quot; together
-        with the name of your host country in an online search engine to locate
-        official documentation.
-      </p>
-    </section>
+              return (
+                <article
+                  key={item.id || item.code || name}
+                  className="resource-card"
+                >
+                  <header className="resource-header">
+                    <h2>{name}</h2>
+                    {item.code && (
+                      <span className="resource-tag">{item.code}</span>
+                    )}
+                  </header>
+
+                  {notes && <p className="resource-notes">{notes}</p>}
+
+                  <ul className="resource-links">
+                    {immigration && (
+                      <li>
+                        <a
+                          href={immigration}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Immigration website
+                        </a>
+                      </li>
+                    )}
+                    {authority && (
+                      <li>
+                        <a href={authority} target="_blank" rel="noreferrer">
+                          Competent Authority
+                        </a>
+                      </li>
+                    )}
+                    {forms && (
+                      <li>
+                        <a href={forms} target="_blank" rel="noreferrer">
+                          Forms / application portal
+                        </a>
+                      </li>
+                    )}
+                    {!immigration && !authority && !forms && (
+                      <li className="resource-missing">
+                        Official links not yet available. Please search the
+                        destination country’s Ministry of Labour or Immigration
+                        website for the most up-to-date information.
+                      </li>
+                    )}
+                  </ul>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
+    </div>
   );
 }
+
+export default Resources;

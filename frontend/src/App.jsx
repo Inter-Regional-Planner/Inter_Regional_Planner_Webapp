@@ -1,40 +1,44 @@
-import { Routes, Route, Link } from 'react-router-dom';
-import Home from './pages/Home';
-import CsmeBasics from './pages/CsmeBasics';
-import Wizard from './pages/Wizard';
-import Plan from './pages/Plan';
-import Resources from './pages/Resources';
+// src/App.jsx
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Wizard from "./pages/Wizard";
+import Plan from "./pages/Plan";
+/*import MyPlan from "./pages/MyPlan";*/
+import Resources from "./pages/Resources";
+import Contact from "./pages/Contact";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import CsmeBasics from "./pages/CsmeBasics";
 
 function App() {
   return (
-    <div className="app">
-      <header className="navbar">
-        <div className="logo">
-          <Link to="/">Inter Regional Movement Planner</Link>
-        </div>
-        <nav>
-          <Link to="/csme-basics">CSME Basics</Link>
-          <Link to="/wizard">Plan My Move</Link>
-          <Link to="/plan">My Plan</Link>
-          <Link to="/resources">Resources</Link>
-        </nav>
-      </header>
-
-      <main className="content">
+    <div className="app-root">
+      <Navbar />
+      <main className="app-main">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/csme-basics" element={<CsmeBasics />} />
-          <Route path="/wizard" element={<Wizard />} />
-          <Route path="/plan" element={<Plan />} />
+          <Route path="/about" element={<About />} />
+
+          {/* Planner flow */}
+          <Route path="/plan-my-move" element={<Wizard />} />
+          <Route path="/my-plan" element={<Plan />} />
+
+          {/* Extra pages */}
           <Route path="/resources" element={<Resources />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/csme-basics" element={<CsmeBasics />} />
         </Routes>
       </main>
-
-      <footer className="footer">
-        <p>Built for CARICOM citizens exploring regional work opportunities.</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
 
 export default App;
+
