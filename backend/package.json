@@ -1,17 +1,26 @@
 {
   "name": "csme-move-planner-backend",
-  "version": "1.0.0",
+  "version": "1.1.0",
+  "description": "Backend API for Inter Regional Movement Planner (CSME)",
   "main": "server.js",
-  "type": "commonjs",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "seed": "node prisma/seed.js"
   },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
   "dependencies": {
+    "@prisma/client": "5.19.1",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
-    "express": "^4.21.2"
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.3"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.9",
+    "prisma": "5.19.1"
   }
 }
