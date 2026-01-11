@@ -2,7 +2,7 @@
 
 ## **Overview**
 
-The **CSME Move Planner** is a full-stack web application designed to help CARICOM nationals understand how to legally move to another Caribbean country for work under the **CARICOM Single Market and Economy (CSME)**.
+The **Inter Regional Moverment Planner** is a full-stack web application designed to help CARICOM nationals understand how to legally move to another Caribbean country for work under the **CARICOM Single Market and Economy (CSME)**.
 The platform simplifies the Free Movement of Skills process by allowing users to:
 
 * Select their **home country**, **target country**, and **professional category**
@@ -15,31 +15,29 @@ This project promotes safe, legal, and informed intra-regional mobility while su
 Google Doc for more design and functionality information: https://docs.google.com/document/d/1ye3nYQRRLvTwb_aQYq05UvZr_i9UvOYOFhHYkTfdPDY/edit?usp=sharing
 ---
 
-## **Features**
+## **Usage Guide**
 
-### Move Planner Wizard
+### For Guests (No Registration Required)
+1. Visit the homepage
+2. Click "Plan my Move"
+3. Select your home country, destination, and category
+4. Generate your personalized plan
+5. Use the checklist to track progress
+6. Export your plan as PDF
 
--Collects user inputs (home country, target country, category) and generates a custom plan.
+### For Registered Users
+1. Sign up for an account
+2. Log in with your credentials
+3. Create plans that are automatically saved
+4. Access your plan history in "My Plan"
+5. Track progress across multiple plans
+6. Plans persist across sessions
 
-### Rule-Based Guidance Engine
-
--The backend matches country/category combinations with stored rules and returns tailored instructions.
-
-### Document Checklist
-
--Interactive checklist stored in browser localStorage.
-
-### CSME Education Section
-
--Explains Free Movement of Skills, eligibility categories, and limitations.
-
-### Resources Page
-
--Lists participating CSME Member States and research tips.
-
-### Fully Modular & Expandable
-
--New countries, categories, or rules can easily be added by editing JSON files.
+### PDF Export
+- Available to all users (guests and registered)
+- Includes all plan details and checklist progress
+- Professional formatting ready for printing
+- Contains official resource links
 
 ---
 
@@ -47,54 +45,64 @@ Google Doc for more design and functionality information: https://docs.google.co
 
 ### **Frontend**
 
-* React (Vite)
-* React Router
-* JavaScript (ES6+)
-* CSS
+- **React 19** with Vite build tool
+- **React Router** for navigation
+- **Context API** for state management
+- **Vanilla CSS** for styling
+- **Local Storage** for guest user persistence
 
 ### **Backend**
 
-* Node.js
-* Express.js
-* CORS
-* JSON data structure
+- **Node.js** with Express.js framework
+- **PostgreSQL** database
+- **Prisma** ORM for database management
+- **JWT** for authentication
+- **bcryptjs** for password hashing
 
-### **Storage**
 
-* JSON files (countries, categories, rules)
-* Browser localStorage (checklist tracking)
 
-Artificial intelligence tools were ** use for the basic frame work in the app’s functional logic but still be further enhanced using my front-end development background and UI/UX design skiils**.
+Artificial intelligence tools were ** use for the basic frame work in the app’s functional logic and troubleshooting issues when connecting the backend to frontend and database integration challenges but still be further enhanced using my front-end development background and UI/UX design skiils**.
 
 
 # **Project Structure**
 
 ```
 Inter-Regional-planner-Webapp/
-│── backend/
-│     ├── server.js
-│     ├── package.json
-│     └── data/
-│         ├── countries.json
-│         ├── categories.json
-│         └── rules.json
-│
-│── frontend/
-      ├── src/
-      │    ├── App.jsx
-      │    ├── main.jsx
-      │    ├── index.css
-      │    ├── planner/
-      │    │     └── PlannerContext.jsx
-      │    └── pages/
-      │          ├── Home.jsx
-      │          ├── CsmeBasics.jsx
-      │          ├── Wizard.jsx
-      │          ├── Plan.jsx
-      │          └── Resources.jsx
-      ├── package.json
-```
-
+├── backend/
+│   ├── prisma/
+│   │   └── schema.prisma      # Database schema
+│   ├── package.json           # Backend dependencies
+│   ├── server.js              # Main server file
+│   └── .env                   # Environment variables 
+├── frontend/
+│   ├── public/
+│   │   └── index.html         # HTML template
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx     # Navigation component
+│   │   │   └── Footer.jsx     # Footer component
+│   │   ├── pages/
+│   │   │   ├── Home.jsx       # Homepage
+│   │   │   ├── About.jsx      # About page
+│   │   │   ├── Contact.jsx    # Contact page
+│   │   │   ├── Resources.jsx  # Resources page
+│   │   │   ├── CsmeBasics.jsx # CSME information
+│   │   │   ├── Login.jsx      # Login page
+│   │   │   ├── Signup.jsx     # Registration page
+│   │   │   ├── Wizard.jsx     # Plan creation wizard
+│   │   │   └── Plan.jsx       # My Plan page
+│   │   ├── planner/
+│   │   │   └── PlannerContext.jsx # Global state management
+│   │   ├── utils/
+│   │   │   └── pdfExport.js   # PDF export utility
+│   │   ├── App.jsx            # Main app component
+│   │   ├── main.jsx           # React entry point
+│   │   └── index.css          # Global styles
+│   ├── package.json           # Frontend dependencies
+│   ├── vite.config.js         # Vite configuration
+│   └── .env                   # Environment variables 
+├── README.md                  # This file
+└── .gitignore                 # Git ignore file
 ---
 
 # **How to Run the Project Locally**
@@ -103,8 +111,9 @@ Inter-Regional-planner-Webapp/
 
 Ensure you have installed:
 
-* Node.js (v18+)
-* npm (comes with Node)
+* Node.js (v18 or higher)
+* PostgreSQL database
+* npm or yarn package manager
 * A web browser (Chrome, Edge, Firefox, etc.)
 
 ---
@@ -204,18 +213,82 @@ in each terminal window.
 
 ---
 
-# **5. Future Enhancements**
+# **5. API Endpoints
+
+### Authentication
+- `POST /api/auth/signup` - User registration
+- `POST /api/auth/login` - User authentication
+
+### Plans (Protected)
+- `GET /api/user/plans` - Get user's saved plans
+- `POST /api/plan` - Create new plan
+- `PUT /api/plan/:id/checklist` - Update checklist progress
+- `GET /api/plan/:id` - Get specific plan
+- `DELETE /api/plan/:id` - Delete plan
+
+### Public Data
+- `GET /api/countries` - Get country list
+- `GET /api/categories` - Get category list
+- `GET /api/resources` - Get resource links
+
+## Testing Checklist
+
+### Authentication
+- [ ] User can register with valid information
+- [ ] User can login with correct credentials
+- [ ] Session persists after page refresh
+- [ ] Logout works correctly
+
+### Plan Management
+- [ ] Guest can create and view plans
+- [ ] Guest checklist saves to localStorage
+- [ ] Authenticated user can save plans to database
+- [ ] Plans persist across sessions
+- [ ] PDF export works correctly
+
+### User Interface
+- [ ] Navigation updates based on login state
+- [ ] User greeting appears when logged in
+- [ ] All pages load without errors
+- [ ] Checklist interactions work smoothly
+
+## Troubleshooting
+
+### Common Issues
+
+**Database Connection Error**
+- Ensure PostgreSQL is running
+- Check DATABASE_URL in backend .env
+- Run `npx prisma migrate dev`
+
+**CORS Error**
+- Update FRONTEND_ORIGIN in backend .env
+- Ensure frontend and backend URLs match
+
+**Authentication Failures**
+- Check JWT_SECRET is set
+- Verify database migration completed
+- Clear browser localStorage if needed
+
+**PDF Export Not Working**
+- Ensure popup blockers allow new windows
+- Check browser console for errors
+- Verify all plan data is loaded
+
+# **6. Future Enhancements**
 
 Possible future improvements include:
 
 * Mobile app version
 * Integration with government APIs for automatic verification
-* PDF export of plans
+* PDF export of plans and customization
 * Multi-language support (English + Caribbean Creoles)
 * Job board integration across CARICOM states
+* Document upload functionality
+* Email notifications and confirmations
 
 ---
 
-# **6. License**
+# **7. License**
 
 
