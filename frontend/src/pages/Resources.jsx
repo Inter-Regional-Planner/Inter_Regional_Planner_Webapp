@@ -1,145 +1,88 @@
-// src/pages/Resources.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-const API_BASE =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 
-function Resources() {
-  const [resources, setResources] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function Resources() {
+  const [items, setItems] = useState([]);
+  const [q, setQ] = useState("");
   const [error, setError] = useState("");
-  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    async function loadResources() {
+    async function load() {
       try {
-        setLoading(true);
         setError("");
-
-        // assumes your backend exposes GET /api/resources
         const res = await fetch(`${API_BASE}/api/resources`);
-
-        if (!res.ok) {
-          throw new Error("Failed to load resources");
-        }
-
         const data = await res.json();
-        setResources(Array.isArray(data) ? data : []);
-      } catch (err) {
-        console.error(err);
-        setError(
-          "We couldn’t load the resources right now. Please refresh or try again later."
-        );
-      } finally {
-        setLoading(false);
+
+        if (!res.ok) throw new Error(data?.error || "Failed to load resources");
+        setItems(Array.isArray(data) ? data : []);
+      } catch (e) {
+        setError(e.message);
       }
     }
-
-    loadResources();
+    load();
   }, []);
 
-  const filtered = resources.filter((item) => {
-    const name = (item.name || item.country || "").toLowerCase();
-    const q = search.toLowerCase();
-    return name.includes(q);
-  });
+  const filtered = useMemo(() => {
+    const query = q.trim().toLowerCase();
+    if (!query) return items;
+
+    return items.filter((c) => {
+      const name = (c.name || "").toLowerCase();
+      const code = (c.code || "").toLowerCase();
+      return name.includes(query) || code.includes(query);
+    });
+  }, [items, q]);
 
   return (
-    <div className="page page-resources">
-      {/* Header */}
-      <section className="section">
-        <h1 className="section-title">Resources</h1>
-        <p className="section-subtitle">
-          Explore immigration websites, competent authorities, forms, and
-          country-specific notes to support your move across the Caribbean.
-        </p>
-      </section>
+    <div className="section">
+      <h1 className="section-title">Resources</h1>
+      <p className="section-subtitle">
+        Explore immigration websites, competent authorities, forms, and notes.
+      </p>
 
-      {/* Search + content */}
-      <section className="section">
-        {/* Search bar */}
-        <div className="resources-search">
-          <input
-            type="text"
-            className="form-input"
-            placeholder="Search by country or territory…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
+      <input
+        className="form-input"
+        placeholder="Search by country or territory..."
+        value={q}
+        onChange={(e) => setQ(e.target.value)}
+      />
 
-        {loading ? (
-          <p>Loading resources…</p>
-        ) : error ? (
-          <p className="form-error">{error}</p>
-        ) : filtered.length === 0 ? (
-          <p>No resources found for that search.</p>
-        ) : (
-          <div className="resources-grid">
-            {filtered.map((item) => {
-              const name = item.name || item.country || "Country";
-              const immigration = item.immigrationUrl || item.immigration;
-              const authority =
-                item.competentAuthorityUrl || item.competentAuthority;
-              const forms = item.formsUrl || item.forms;
-              const notes = item.notes || item.description;
+      {error && <p className="form-error">{error}</p>}
 
-              return (
-                <article
-                  key={item.id || item.code || name}
-                  className="resource-card"
-                >
-                  <header className="resource-header">
-                    <h2>{name}</h2>
-                    {item.code && (
-                      <span className="resource-tag">{item.code}</span>
-                    )}
-                  </header>
+      <div style={{ marginTop: "1rem" }}>
+        {filtered.map((c) => (
+          <div key={c.code} className="planner-card" style={{ marginBottom: "1rem" }}>
+            <h2 style={{ marginTop: 0 }}>{c.name} <span style={{ color: "#6b7280" }}>({c.code})</span></h2>
 
-                  {notes && <p className="resource-notes">{notes}</p>}
+            <ul>
+              {c.immigrationUrl && (
+                <li>
+                  <a href={c.immigrationUrl} target="_blank" rel="noreferrer">
+                    Immigration website
+                  </a>
+                </li>
+              )}
+              {c.competentAuthorityUrl && (
+                <li>
+                  <a href={c.competentAuthorityUrl} target="_blank" rel="noreferrer">
+                    Competent Authority
+                  </a>
+                </li>
+              )}
+              {c.formsUrl && (
+                <li>
+                  <a href={c.formsUrl} target="_blank" rel="noreferrer">
+                    Forms / Online services
+                  </a>
+                </li>
+              )}
+            </ul>
 
-                  <ul className="resource-links">
-                    {immigration && (
-                      <li>
-                        <a
-                          href={immigration}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          Immigration website
-                        </a>
-                      </li>
-                    )}
-                    {authority && (
-                      <li>
-                        <a href={authority} target="_blank" rel="noreferrer">
-                          Competent Authority
-                        </a>
-                      </li>
-                    )}
-                    {forms && (
-                      <li>
-                        <a href={forms} target="_blank" rel="noreferrer">
-                          Forms / application portal
-                        </a>
-                      </li>
-                    )}
-                    {!immigration && !authority && !forms && (
-                      <li className="resource-missing">
-                        Official links not yet available. Please search the
-                        destination country’s Ministry of Labour or Immigration
-                        website for the most up-to-date information.
-                      </li>
-                    )}
-                  </ul>
-                </article>
-              );
-            })}
+            {c.notes && <p style={{ color: "#4b5563" }}>{c.notes}</p>}
           </div>
-        )}
-      </section>
+        ))}
+      </div>
     </div>
   );
 }
-
-export default Resources;

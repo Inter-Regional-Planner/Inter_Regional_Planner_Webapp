@@ -47,7 +47,7 @@ export default function Signup() {
           email: form.email,
           password: form.password,
           country: form.country || null,
-          dob: form.dob || null, // "YYYY-MM-DD"
+          dob: form.dob || null,
         }),
       });
 
@@ -61,7 +61,7 @@ export default function Signup() {
       localStorage.setItem("irp_token", data.token);
       localStorage.setItem("irp_user", JSON.stringify(data.user));
 
-      // Go to Plan My Move (or My Plan – your choice)
+      // Go to Plan My Move
       navigate("/plan-my-move");
     } catch (err) {
       console.error("Signup error:", err);
