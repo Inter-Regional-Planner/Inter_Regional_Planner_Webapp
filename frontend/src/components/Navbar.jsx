@@ -1,14 +1,21 @@
 // src/components/Navbar.jsx
 import { NavLink, Link } from "react-router-dom";
-/*import "./Navbar.css"; // optional, or just rely on index.css*/
+import { usePlanner } from "../planner/PlannerContext";
 
 function Navbar() {
+  const { isAuthenticated, user, clearAuth } = usePlanner();
+
+  const handleLogout = () => {
+    clearAuth();
+    // Redirect to home after logout
+    window.location.href = '/';
+  };
+
   return (
     <header className="nav-wrapper">
       <nav className="nav">
         {/* Logo */}
         <Link to="/" className="nav-logo">
-          {/* You can replace with an <img src="/logo.svg" /> */}
           <span className="nav-logo-mark">IR</span>
           <span className="nav-logo-text">Movement Planner</span>
         </Link>
@@ -37,12 +44,28 @@ function Navbar() {
 
         {/* Right side actions */}
         <div className="nav-actions">
-          <Link to="/signup" className="nav-secondary-btn">
-            Sign in
-          </Link>
-          <Link to="/login" className="nav-primary-btn">
-            Log in
-          </Link>
+          {isAuthenticated() ? (
+            <>
+              <span className="nav-user-greeting">
+                Hi, {user?.name || 'User'}
+              </span>
+              <button 
+                onClick={handleLogout} 
+                className="nav-primary-btn"
+              >
+                Log out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/signup" className="nav-secondary-btn">
+                Sign up
+              </Link>
+              <Link to="/login" className="nav-primary-btn">
+                Log in
+              </Link>
+            </>
+          )}
         </div>
       </nav>
     </header>
