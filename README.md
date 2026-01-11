@@ -1,4 +1,4 @@
-# **CSME Move Planner – README**
+# **Inter-Regional Movement Planner – README**
 
 ## **Overview**
 
@@ -103,6 +103,9 @@ Inter-Regional-planner-Webapp/
 │   └── .env                   # Environment variables 
 ├── README.md                  # This file
 └── .gitignore                 # Git ignore file
+
+```
+
 ---
 
 # **How to Run the Project Locally**
@@ -213,7 +216,7 @@ in each terminal window.
 
 ---
 
-# **5. API Endpoints
+# 5. API Endpoints
 
 ### Authentication
 - `POST /api/auth/signup` - User registration
