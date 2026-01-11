@@ -294,4 +294,28 @@ Possible future improvements include:
 
 # **7. License**
 
+© 2026 Joseann Boneo. All rights reserved.
+
+This project is provided for **portfolio, educational, and demonstration purposes only**.
+
+### Permitted Use
+- Viewing and reviewing the code for learning and evaluation
+- Referencing the project as part of a personal or academic portfolio
+- Forking for **personal, non-commercial experimentation** (no redistribution)
+
+### Prohibited Use
+- Commercial use of any kind
+- Redistribution or re-publication of the code or derivative works
+- Use of the code in production systems or commercial products
+- Claiming this work as your own or removing attribution
+
+### Permissions
+If you are interested in:
+- Commercial use
+- Collaboration
+- Licensing this project for production
+
+Please contact the author to request explicit written permission.
+
+This repository does **not** grant any patent rights, trademark rights, or implied licenses.
 
