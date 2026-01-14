@@ -1,8 +1,11 @@
+// src/pages/Resources.jsx
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 
 export default function Resources() {
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [q, setQ] = useState("");
   const [error, setError] = useState("");
@@ -38,7 +41,7 @@ export default function Resources() {
     <div className="section">
       <h1 className="section-title">Resources</h1>
       <p className="section-subtitle">
-        Explore immigration websites, competent authorities, forms, and notes.
+        Search a country to view stats, industries, maps, job boards, and housing.
       </p>
 
       <input
@@ -52,35 +55,52 @@ export default function Resources() {
 
       <div style={{ marginTop: "1rem" }}>
         {filtered.map((c) => (
-          <div key={c.code} className="planner-card" style={{ marginBottom: "1rem" }}>
-            <h2 style={{ marginTop: 0 }}>{c.name} <span style={{ color: "#6b7280" }}>({c.code})</span></h2>
+          <button
+            key={c.code}
+            type="button"
+            className="planner-card"
+            onClick={() => navigate(`/country/${c.code}`)}
+            style={{
+              marginBottom: "1rem",
+              width: "100%",
+              textAlign: "left",
+              cursor: "pointer",
+              border: "none",
+            }}
+          >
+            <h2 style={{ marginTop: 0 }}>
+              {c.name} <span style={{ color: "#6b7280" }}>({c.code})</span>
+            </h2>
 
-            <ul>
+            <p style={{ color: "#4b5563", marginTop: 0 }}>
+              Click to view country details, map, jobs, and housing.
+            </p>
+
+            {/* Keep your original external links visible too */}
+            <ul style={{ marginBottom: 0 }}>
               {c.immigrationUrl && (
                 <li>
-                  <a href={c.immigrationUrl} target="_blank" rel="noreferrer">
+                  <a href={c.immigrationUrl} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>
                     Immigration website
                   </a>
                 </li>
               )}
               {c.competentAuthorityUrl && (
                 <li>
-                  <a href={c.competentAuthorityUrl} target="_blank" rel="noreferrer">
+                  <a href={c.competentAuthorityUrl} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>
                     Competent Authority
                   </a>
                 </li>
               )}
               {c.formsUrl && (
                 <li>
-                  <a href={c.formsUrl} target="_blank" rel="noreferrer">
+                  <a href={c.formsUrl} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()}>
                     Forms / Online services
                   </a>
                 </li>
               )}
             </ul>
-
-            {c.notes && <p style={{ color: "#4b5563" }}>{c.notes}</p>}
-          </div>
+          </button>
         ))}
       </div>
     </div>

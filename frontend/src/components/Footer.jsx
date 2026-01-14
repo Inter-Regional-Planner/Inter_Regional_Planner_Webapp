@@ -4,7 +4,7 @@ function Footer() {
     <footer className="site-footer">
       <div className="footer-inner">
         <div className="footer-brand">
-          <div className="footer-logo">IR</div>
+          <div className="footer-logo"></div>
           <p className="footer-tagline">
             Inter Regional Movement Planner — Bridging islands, building
             futures.

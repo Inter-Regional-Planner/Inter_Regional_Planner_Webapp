@@ -1,5 +1,5 @@
 // src/App.jsx
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PlannerProvider } from "./planner/PlannerContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -13,6 +13,7 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import CsmeBasics from "./pages/CsmeBasics";
+import CountryDetail from "./pages/CountryDetail";
 
 function App() {
   return (
@@ -27,6 +28,10 @@ function App() {
             {/* Planner flow */}
             <Route path="/plan-my-move" element={<Wizard />} />
             <Route path="/my-plan" element={<Plan />} />
+
+            {/* Country resources and country details*/}
+            <Route path="/resources" element={<Resources />} />
+            <Route path="/country/:code" element={<CountryDetail />} />
 
             {/* Extra pages */}
             <Route path="/resources" element={<Resources />} />
