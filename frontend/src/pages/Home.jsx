@@ -7,7 +7,6 @@ function Home() {
     <div className="page page-home">
       {/* Hero */}
       <section className="hero">
-        <div className="hero-overlay" />
         <div className="hero-content">
           <h1 className="hero-title">Inter Regional Movement Planner</h1>
           <p className="hero-subtitle">Bridging Islands, Building Futures.</p>
@@ -23,42 +22,29 @@ function Home() {
         </div>
       </section>
 
-      {/* Why use section */}
-      <section className="section section-why">
-        <h2 className="section-title">Why use the Movement Planner?</h2>
-        <p className="section-subtitle">
-          A smarter way to navigate work and mobility across CARICOM nations.
-        </p>
-
-        <div className="feature-grid">
-          <div className="feature-card">
-            <h3>Built for CARICOM</h3>
-            <p>Designed specifically for regional free movement and CSME.</p>
-          </div>
-          <div className="feature-card">
-            <h3>Personalized Move Plan</h3>
+      {/* What is the platform */}
+      <section className="section section-about-main">
+        <div className="about-two-column">
+          <div>
+            <h2>What is the Inter Regional Movement Planner?</h2>
             <p>
-              Get customized steps based on your home country, destination, and
-              profession.
+              A digital platform that helps Caribbean nationals understand how
+              to work legally in other CARICOM countries under CSME. The
+              Movement Planner is designed to make CSME free movement easier,
+              clearer, and more accessible for every Caribbean national.
             </p>
+            <p>It provides:</p>
+            <ul>
+              <li>Personalized move plans</li>
+              <li>Document checklists</li>
+              <li>Estimated timelines</li>
+              <li>Official government links</li>
+              <li>Competent Authority details</li>
+              <li>Country-specific requirements</li>
+              <li>Tools to track progress and save plans (for logged-in users)</li>
+            </ul>
           </div>
-          <div className="feature-card">
-            <h3>Smart Checklist</h3>
-            <p>Know exactly which documents you need, with explanations.</p>
-          </div>
-          <div className="feature-card">
-            <h3>Action Timeline</h3>
-            <p>
-              See estimated timelines and suggested dates to keep you on track.
-            </p>
-          </div>
-          <div className="feature-card">
-            <h3>Country Requirements</h3>
-            <p>View country-specific notes, links, and verification steps.</p>
-          </div>
-          <div className="feature-card">
-            <h3>Save & Track Progress</h3>
-            <p>Log in to save your plan and track your checklist over time.</p>
+          <div className="about-image-card">
           </div>
         </div>
       </section>

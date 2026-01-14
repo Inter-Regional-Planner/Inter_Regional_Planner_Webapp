@@ -16,7 +16,7 @@ function Navbar() {
       <nav className="nav">
         {/* Logo */}
         <Link to="/" className="nav-logo">
-          <span className="nav-logo-mark">IR</span>
+          <span className="nav-logo-mark"></span>
           <span className="nav-logo-text">Movement Planner</span>
         </Link>
 

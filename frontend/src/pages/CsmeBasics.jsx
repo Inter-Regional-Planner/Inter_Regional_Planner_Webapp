@@ -4,7 +4,6 @@ function CsmeBasics() {
     <div className="page page-csme">
       {/* Banner */}
       <section className="banner">
-        <div className="banner-overlay" />
         <div className="banner-content">
           <h1>CSME Basics</h1>
           <p>Understanding Free Movement of Skills across the Caribbean.</p>
@@ -28,9 +27,19 @@ function CsmeBasics() {
               CARICOM nationals the right to work in another participating
               Member State without a traditional work permit.
             </p>
+            <p className="section-text">
+            <a
+              href="https://caricom.org/caricom-single-market-and-economy-csme/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="external-link"
+            >
+              Visit the official CSME website for more information.
+            </a>
+          </p>
           </div>
-          <div className="about-placeholder-card">
-            {/* Replace with an illustration/map later if you like */}
+          <div className="about-csme-card">
+      
           </div>
         </div>
       </section>
