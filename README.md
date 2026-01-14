@@ -75,16 +75,18 @@ Inter-Regional-planner-Webapp/
 │   ├── server.js              # Main server file
 │   └── .env                   # Environment variables 
 ├── frontend/
-│   ├── public/
-│   │   └── index.html         # HTML template
+│   ├── index.html         # HTML template
 │   ├── src/
 │   │   ├── components/
 │   │   │   ├── Navbar.jsx     # Navigation component
 │   │   │   └── Footer.jsx     # Footer component
+│   │   ├── data/
+│   │   │   └── countryMeta.js # Additional Countries'Information 
 │   │   ├── pages/
 │   │   │   ├── Home.jsx       # Homepage
 │   │   │   ├── About.jsx      # About page
 │   │   │   ├── Contact.jsx    # Contact page
+│   │   │   ├── CountryDetails.jsx # General Country Information
 │   │   │   ├── Resources.jsx  # Resources page
 │   │   │   ├── CsmeBasics.jsx # CSME information
 │   │   │   ├── Login.jsx      # Login page
